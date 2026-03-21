@@ -8,3 +8,5 @@ wheels/
 
 # Virtual environments
 .venv
+csv_data.zip
+csv_data/

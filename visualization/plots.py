@@ -35,14 +35,16 @@ def plot_invocation_patterns(global_df: pd.DataFrame, output_path: str):
     axes[0].set_xlabel("Minutes")
     axes[0].set_ylabel("Invocations")
 
-    # Single day
-    day_slice = slice(0, 24 * 60)
-    axes[1].plot(range(24 * 60), inv[day_slice], color="#E74C3C", linewidth=1.2)
-    axes[1].set_title("Single Day Pattern (Day 1)")
+    # Single day — use however many minutes are actually available (up to 1440)
+    day_data = inv[:min(24 * 60, len(inv))]
+    n_day = len(day_data)
+    axes[1].plot(range(n_day), day_data, color="#E74C3C", linewidth=1.2)
+    axes[1].set_title(f"Single Day Pattern (first {n_day} minutes)")
     axes[1].set_xlabel("Minute of Day")
     axes[1].set_ylabel("Invocations")
-    axes[1].axvspan(9 * 60, 17 * 60, alpha=0.1, color="green", label="Business Hours")
-    axes[1].legend()
+    if n_day > 9 * 60:
+        axes[1].axvspan(9 * 60, min(17 * 60, n_day), alpha=0.1, color="green", label="Business Hours")
+        axes[1].legend()
 
     # Hourly heatmap (7 days)
     hourly = np.zeros((7, 24))
