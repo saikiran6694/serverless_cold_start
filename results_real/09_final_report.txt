@@ -1,6 +1,6 @@
 
 ==========================================================
- PROACTIVE COLD START MITIGATION — REAL DATA RESULTS
+ PROACTIVE COLD START MITIGATION -- REAL DATA RESULTS
 ==========================================================
 
 DATASET (Real Azure Functions Trace)
@@ -12,7 +12,11 @@ DATASET (Real Azure Functions Trace)
   Raw cold start rate  : 0.57%
   Median duration      : 0.031 s
   P95 duration         : 14.416 s
-  Date range           : 2020-01-06 00:00:00.001490831+00:00 → 2020-01-19 23:59:59.693464041+00:00
+  Date range           : 2020-01-06 00:00:00.001490831+00:00 -> 2020-01-19 23:59:59.693464041+00:00
+
+ENSEMBLE MODE
+--------------------------------------
+  LSTM (0.40) + GB (0.60) -- TRUE FUSION
 
 PREDICTION PERFORMANCE (GB, Test Set)
 --------------------------------------
@@ -48,9 +52,14 @@ KEY FINDINGS (Real Data)
    which functions are the highest-priority warming targets.
 
 3. Temporal patterns (hour/day) from real traces align with
-   the proposal hypothesis — business-hour peaks are clear.
+   the proposal hypothesis -- business-hour peaks are clear.
 
 4. The GB model exceeds the 70% accuracy baseline cited
    in the proposal across all three prediction horizons.
+
+5. True LSTM+GB ensemble ACTIVE:
+   LSTM captures daily/weekly temporal cycles; GB handles
+   feature-rich burst patterns. Weighted fusion (LSTM=0.4,
+   GB=0.6) produces the final warm/no-warm decisions.
 
 ==========================================================

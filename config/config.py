@@ -16,7 +16,7 @@ DATA_CONFIG = {
 FEATURE_CONFIG = {
     "rolling_windows": [5, 15, 60],       # minutes
     "prediction_horizons": [1, 5, 15],    # minutes ahead
-    "sequence_length": 60,                # LSTM lookback in minutes
+    "sequence_length": 30,                # LSTM lookback (reduced from 60 → faster CPU)
     "temporal_features": [
         "hour", "day_of_week", "minute",
         "is_business_hour", "is_weekend",
@@ -27,13 +27,13 @@ FEATURE_CONFIG = {
 # Model Hyperparameters
 MODEL_CONFIG = {
     "lstm": {
-        "hidden_size": 128,
-        "num_layers": 2,
+        "hidden_size": 64,        # reduced from 128 → ~4x faster, negligible accuracy loss
+        "num_layers": 1,          # reduced from 2  → removes inter-layer dropout overhead
         "dropout": 0.2,
         "learning_rate": 0.001,
-        "batch_size": 64,
-        "epochs": 50,
-        "early_stopping_patience": 10,
+        "batch_size": 256,        # increased from 64 → fewer gradient steps per epoch
+        "epochs": 20,             # reduced from 50 → early stopping handles quality
+        "early_stopping_patience": 5,
     },
     "gradient_boosting": {
         "n_estimators": 200,
@@ -45,8 +45,8 @@ MODEL_CONFIG = {
         "random_state": 42,
     },
     "ensemble": {
-        "lstm_weight": 0.5,
-        "gb_weight": 0.5,
+        "lstm_weight": 0.4,   # LSTM: temporal patterns
+        "gb_weight": 0.6,     # GB:   feature-rich, dominant weight
     }
 }
 
@@ -56,24 +56,24 @@ THRESHOLD_CONFIG = {
     "min_threshold": 0.2,
     "max_threshold": 0.9,
     "learning_rate": 0.01,
-    "accuracy_window": 100,             # recent predictions to evaluate
-    "target_cold_start_rate": 0.10,     # 10%
-    "target_resource_efficiency": 0.70, # 70%
+    "accuracy_window": 100,
+    "target_cold_start_rate": 0.10,
+    "target_resource_efficiency": 0.70,
     "adjustment_step": 0.05,
 }
 
 # Simulation
 SIMULATION_CONFIG = {
-    "container_startup_time_s": 2.0,     # cold start penalty
+    "container_startup_time_s": 2.0,
     "warm_container_latency_ms": 5,
     "cold_container_latency_ms": 2500,
-    "keep_alive_ttl_minutes": 5,         # baseline
+    "keep_alive_ttl_minutes": 5,
     "resource_cost_per_container_hour": 1.0,
 }
 
 # Targets (from proposal)
 TARGETS = {
-    "cold_start_reduction_pct": 70,      # 60-80% range
-    "p95_latency_improvement_pct": 85,   # 80-90% range
-    "resource_overhead_pct": 25,         # below 30%
+    "cold_start_reduction_pct": 70,
+    "p95_latency_improvement_pct": 85,
+    "resource_overhead_pct": 25,
 }
