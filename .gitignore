@@ -10,3 +10,4 @@ wheels/
 .venv
 R1
 R1.zip
+.DS_Store

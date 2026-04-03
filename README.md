@@ -50,12 +50,20 @@ Each day's data is organized as per-minute records with:
 1. **Install dependencies:**
 
 ```bash
+# if uv
+uv add -r requirements.txt
+
+# or else
 pip install -r requirements.txt
 ```
 
 For GPU acceleration with CUDA support:
 
 ```bash
+# if uv
+uv add torch --index-url https://download.pytorch.org/whl/cu121
+
+# or else
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
@@ -66,15 +74,8 @@ The dataset consists of 31 CSV files (day_0.csv through day_30.csv) representing
 **Download the dataset:**
 
 Click the link below to download the R1.zip file containing all trace data:
+[Download R1 Dataset] ([text](https://drive.google.com/file/d/1mMQtfZNtg-EPmGmGYuOzC5KPbZoXRd8e/view?usp=sharing))
 
-
-Alternatively, download using command line:
-
-```bash
-wget https://huawei-cloud-traces-2025.s3.amazonaws.com/R1.zip
-# or using curl:
-curl -O https://huawei-cloud-traces-2025.s3.amazonaws.com/R1.zip
-```
 
 **Extract the dataset:**
 
@@ -89,6 +90,10 @@ This will create a directory with CSV files named `day_0.csv`, `day_1.csv`, ...,
 Run the full pipeline:
 
 ```bash
+# if uv
+uv run python main.py --dir /path/to/extracted/data/
+
+# or else
 python main.py --dir /path/to/extracted/data/
 ```
 
@@ -97,6 +102,10 @@ python main.py --dir /path/to/extracted/data/
 
 **Example:**
 ```bash
+# if uv
+uv run python main.py --dir ./extracted_data/
+
+# or else
 python main.py --dir ./extracted_data/
 ```
 
@@ -218,10 +227,4 @@ See project repository for licensing information.
 
 - PyTorch Documentation: https://pytorch.org/docs/stable/
 - scikit-learn: https://scikit-learn.org/
-- Huawei Cloud Traces: [Dataset documentation]
-
----
-
-**Last Updated:** April 2026  
-**Author:** ML Pipeline  
-**Version:** 0.1.0
+- Huawei Cloud Traces: [[text](https://github.com/sir-lab/data-release/blob/main/README_data_release_2025.md)]
