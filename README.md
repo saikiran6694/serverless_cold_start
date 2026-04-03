@@ -74,7 +74,7 @@ The dataset consists of 31 CSV files (day_0.csv through day_30.csv) representing
 **Download the dataset:**
 
 Click the link below to download the R1.zip file containing all trace data:
-[Download R1 Dataset] ([text](https://drive.google.com/file/d/1mMQtfZNtg-EPmGmGYuOzC5KPbZoXRd8e/view?usp=sharing))
+([Download R1 Dataset](https://drive.google.com/file/d/1mMQtfZNtg-EPmGmGYuOzC5KPbZoXRd8e/view?usp=sharing))
 
 
 **Extract the dataset:**
@@ -227,4 +227,4 @@ See project repository for licensing information.
 
 - PyTorch Documentation: https://pytorch.org/docs/stable/
 - scikit-learn: https://scikit-learn.org/
-- Huawei Cloud Traces: [[text](https://github.com/sir-lab/data-release/blob/main/README_data_release_2025.md)]
+- Huawei Cloud Traces: [[Github](https://github.com/sir-lab/data-release/blob/main/README_data_release_2025.md)]
