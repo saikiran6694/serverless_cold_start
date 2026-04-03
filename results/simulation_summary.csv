@@ -1,0 +1,4 @@
+Strategy,Cold Start Rate,Warmings,Reduction vs Baseline
+No Warming (Baseline),0.8105200945626477,0,0.0
+Fixed Threshold (0.5),0.08947990543735225,6533,0.8896018667055563
+Adaptive (Proposed),0.13380614657210402,6099,0.8349132273589033

@@ -1,0 +1,17 @@
+# ─────────────────────────────────────────────────────────────
+# Install:
+#   pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────
+
+torch>=2.2.0
+# Note: for GPU support install torch with CUDA extras instead:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+matplotlib>=3.7.0
+
+xgboost>=1.7.0
+lightgbm>=4.0.0
