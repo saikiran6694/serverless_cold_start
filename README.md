@@ -1,230 +1,302 @@
 # Proactive Cold Start Mitigation in Serverless Environments
 
-A machine learning pipeline for predicting and mitigating cold starts in serverless cloud computing environments using the Huawei Public Cloud Trace 2025 dataset.
+A comprehensive machine learning pipeline for predicting and mitigating cold starts in serverless cloud computing environments using the Huawei Public Cloud Trace 2025 dataset.
 
-## Overview
+## 📋 Overview
 
-This project implements a comprehensive 31-day machine learning pipeline using PyTorch and scikit-learn to:
-- **Predict cold starts** in serverless environments
+This project implements a sophisticated 31-day machine learning pipeline using PyTorch and scikit-learn to:
+- **Predict cold starts** in serverless environments with high accuracy
 - **Forecast** container cold start rates at multiple time horizons (1-min, 5-min, 15-min)
 - **Optimize** resource allocation through an adaptive threshold controller
-- **Ensemble** multiple models for improved prediction accuracy
+- **Ensemble** multiple models for improved prediction accuracy and robustness
 
-**Dataset:** Huawei Public Cloud Trace  Region 1 Cold Start Traces2025 
+**Dataset:** Huawei Public Cloud Trace 2025 – Region 1 Cold Start Traces
 
-## Architecture
+## 🏗️ Architecture
 
-The system consists of five key components:
+The system is built on a hybrid architecture with five key components:
 
-1. **Bidirectional LSTM ( Captures sequential temporal patterns in cold start eventsPyTorch)** 
-2. **RandomForest (scikit- Extracts insights from tabular engineered featureslearn)** 
-3. **Confidence-weighted  Combines predictions weighted by validation AUC scoresEnsemble** 
-4. **Adaptive Threshold  Dynamically adjusts decision thresholds based on FP/FN trade-offsController** 
-5. **Multi-horizon  Generates forecasts at 1-minute, 5-minute, and 15-minute intervalsPrediction** 
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **Bidirectional LSTM** | PyTorch | Captures sequential temporal patterns in cold start events |
+| **RandomForest Classifier** | scikit-learn | Extracts insights from engineered tabular features |
+| **Confidence-Weighted Ensemble** | Custom | Combines predictions weighted by validation AUC scores |
+| **Adaptive Threshold Controller** | Custom | Dynamically adjusts decision thresholds based on FP/FN trade-offs |
+| **Multi-Horizon Predictor** | PyTorch + scikit-learn | Generates forecasts at 1-minute, 5-minute, and 15-minute intervals |
 
-## Data Structure
+## 📊 Data Structure
 
-The pipeline processes 31 days of continuous trace data:
+The pipeline processes 31 days of continuous Huawei cloud trace data with explicit train/validation/test splits:
 
-- **Training Set:** Days 18 (19 days)0
-- **Validation Set:** Days 24 (6 days)19
-- **Test Set:** Days 30 (6 days, held-out evaluation)25
+| Dataset | Days | Records | Purpose |
+|---------|------|---------|---------|
+| **Training** | 0–18 | 19 days | Model training and parameter optimization |
+| **Validation** | 19–24 | 6 days | Hyperparameter tuning and model selection |
+| **Test** | 25–30 | 6 days | Final held-out evaluation and performance assessment |
 
-Each day's data is organized as per-minute records with:
-- `total`: Total invocations
+### Per-Minute Records Include:
+- `total`: Total function invocations
 - `cold`: Cold start count
-- `cold_rate`: Cold start ratio
-- Temporal features (hour, day_of_week, business hours)
-- Rolling window statistics (5-min, 15-min, 60-min)
-- Lagged features (1, 5, 15, 30-minute lags)
+- `cold_rate`: Cold start ratio (cold / total)
+- **Temporal features:** hour of day, day of week, business hours indicator
+- **Aggregation features:** 5-min, 15-min, 60-min rolling means, standard deviations, and cold rates
+- **Lagged features:** 1-min, 5-min, 15-min, 30-min lagged totals and cold counts
+- **Derived features:** trend indicators, burst ratios, cold acceleration metrics
 
-## Installation
+## 🚀 Installation
 
 ### Prerequisites
 
--  3.14Python 
-- pip or uv package manager
+- **Python:** 3.14 or higher
+- **Package Manager:** pip or [uv](https://github.com/astral-sh/uv) (recommended for speed)
 
-### Setup
+### Setup Steps
 
-1. **Install dependencies:**
+1. **Clone the repository and install dependencies:**
 
 ```bash
-# if uv
-uv add -r requirements.txt
+# Using uv (recommended)
+uv sync
 
-# or else
+# Or using pip
 pip install -r requirements.txt
 ```
 
-For GPU acceleration with CUDA support:
+2. **(Optional) Install GPU support for CUDA 12.1:**
 
 ```bash
-# if uv
-uv add torch --index-url https://download.pytorch.org/whl/cu121
+# Using uv
+uv pip install torch --index-url https://download.pytorch.org/whl/cu121
 
-# or else
+# Or using pip
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
-2. **Download and prepare data:**
+3. **Download and extract the dataset:**
 
-The dataset consists of 31 CSV files (day_0.csv through day_30.csv) representing one month of Huawei cloud trace data.
+The dataset consists of 31 CSV files (day_0.csv through day_30.csv) representing one month of Huawei cloud traces.
 
-**Download the dataset:**
+**Download:** [R1 Dataset](https://drive.google.com/file/d/1mMQtfZNtg-EPmGmGYuOzC5KPbZoXRd8e/view?usp=sharing)
 
-Click the link below to download the R1.zip file containing all trace data:
-([Download R1 Dataset](https://drive.google.com/file/d/1mMQtfZNtg-EPmGmGYuOzC5KPbZoXRd8e/view?usp=sharing))
-
-
-**Extract the dataset:**
-
+**Extract:**
 ```bash
 unzip R1.zip
 ```
 
-This will create a directory with CSV files named `day_0.csv`, `day_1.csv`, ..., `day_30.csv`.
+This creates a directory with CSV files named `day_0.csv`, `day_1.csv`, ..., `day_30.csv`.
 
-## Usage
+## ▶️ Usage
 
-Run the full pipeline:
+### Running the Full Pipeline
 
 ```bash
-# if uv
-uv run python main.py --dir /path/to/extracted/data/
+# Using uv
+uv run python main.py --dir /path/to/data/
 
-# or else
-python main.py --dir /path/to/extracted/data/
+# Using python
+python main.py --dir /path/to/data/
 ```
 
-**Arguments:**
-- `--dir`: Path to directory containing extracted CSV files (day_0.csv through day_30.csv)
+### Command-Line Arguments
 
-**Example:**
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `--dir` | Path to directory containing extracted CSV files | `./R1/` or `/data/traces/` |
+
+### Example
+
 ```bash
-# if uv
-uv run python main.py --dir ./extracted_data/
-
-# or else
-python main.py --dir ./extracted_data/
+uv run python main.py --dir ./R1/
 ```
 
-### Output
+### Pipeline Outputs
 
-The pipeline generates:
+The pipeline generates comprehensive results in the following directories:
 
-- **Trained models** in the `models/` directory
-- **Evaluation metrics** and visualizations in the `results/` directory
-- **Predictions** for validation and test sets
-- **Performance reports** with ROC-AUC, F1, precision, and recall scores
+- **`models/`** – Trained model artifacts (BiLSTM, RandomForest, ensemble weights)
+- **`results/`** – Predictions, evaluation metrics, and performance visualizations
+- **Console output** – Training logs, validation metrics, and final performance reports
 
-## Features & Configuration
+**Key metrics reported:**
+- ROC-AUC scores for each horizon and ensemble
+- F1, Precision, and Recall scores
+- ROC curves and threshold analysis plots
+- Prediction accuracy on held-out test set
+
+## ⚙️ Configuration & Customization
 
 ### Hyperparameters
 
-Edit `main.py` to customize:
+Edit `main.py` to modify:
 
-- `LSTM_EPOCHS`: Number of training epochs (default: 120)
-- `BATCH_SIZE`: Batch size for training (default: 64)
-- `PATIENCE`: Early stopping patience (default: 20)
-- `COLD_THRESHOLD`: Cold start classification threshold (default: 0.25)
-- `SEQUENCE_LEN`: LSTM input sequence length (default: 30)
-
-### Primary Horizon
-
-The system focuses on 5-minute predictions by default (`PRIMARY_HORIZON = 'target_5min'`). Modify to use 1-minute or 15-minute horizons as needed.
-
-### Available Features
-
-**Temporal Features:**
-- Hour of day, day of week, business hours indicator
-
-**Aggregation Features:**
-- 5, 15, and 60-minute rolling means, standard deviations, and cold rate
-
-**Lagged Features:**
-- 1, 5, 15, and 30-minute lagged totals and cold counts
-
-**Derived Features:**
-- Trend indicators, burst ratios, cold acceleration metrics
-
-## Performance Metrics
-
-The pipeline evaluates using:
-
-- **ROC-AUC**: Area under the receiver operating characteristic curve
-- **F1 Score**: Harmonic mean of precision and recall
-- **Precision**: True positives / (true positives + false positives)
-- **Recall**: True positives / (true positives + false negatives)
-
-Results are generated for each prediction horizon and the ensemble model.
-
-## Technical Stack
-
-- **PyTorch:** Deep learning and LSTM implementation
-- **scikit-learn:** Random Forest, metrics, preprocessing
-- **pandas:** Data manipulation and feature engineering
-- **NumPy:** Numerical computations
-- **Matplotlib:** Visualization and results plotting
-- **XGBoost & LightGBM:** Optional gradient boosting models
-- **TensorFlow/Keras:** Conditional support for Python 3.3.1310
-
-## Device Support
-
-The system automatically detects and uses:
-- **CUDA GPU** if available (recommended for faster training)
-- **CPU** as fallback
-
-Check device usage in training logs.
-
-## File Structure
-
-```
- main.py                 # Main pipeline script
- requirements.txt        # Python dependencies
- pyproject.toml         # Project configuration
- README.md              # This file
- R1.zip                 # Dataset archive (after download)
- models/                # Trained model artifacts
- results/               # Output predictions and visualizations
- uv.lock               # Dependency lock file
+```python
+LSTM_EPOCHS = 120          # Number of training epochs
+BATCH_SIZE = 64            # Batch size for LSTM training
+PATIENCE = 20              # Early stopping patience
+COLD_THRESHOLD = 0.25      # Cold start classification threshold
+SEQUENCE_LEN = 30          # LSTM input sequence length (in minutes)
+PRIMARY_HORIZON = 'target_5min'  # Primary prediction horizon
 ```
 
-## Troubleshooting
+### Feature Configuration
 
-**Issue: "day_0.csv not found"**
-- Ensure the dataset is downloaded and extracted
-- Verify the `--dir` path points to the extracted CSV files directory
-- Check that files are named day_0.csv through day_30.csv
+**Available prediction horizons:**
+- `target_1min` – 1-minute ahead forecast
+- `target_5min` – 5-minute ahead forecast (default)
+- `target_15min` – 15-minute ahead forecast
 
-**Issue: Download fails**
+Modify `PRIMARY_HORIZON` in `main.py` to switch horizons.
+
+### Feature Engineering Details
+
+The pipeline automatically generates:
+
+| Feature Category | Examples |
+|------------------|----------|
+| **Temporal** | hour_of_day, day_of_week, is_business_hours |
+| **Aggregation** | rolling_mean_5m, rolling_std_15m, cold_rate_60m |
+| **Lagged** | lag_1m_total, lag_5m_cold, lag_30m_total |
+| **Derived** | trend, burst_ratio, cold_acceleration |
+
+## 📈 Performance Metrics
+
+The pipeline evaluates models using standard ML metrics:
+
+| Metric | Definition | Use Case |
+|--------|-----------|----------|
+| **ROC-AUC** | Area under receiver operating characteristic curve | Overall model discrimination ability |
+| **F1 Score** | Harmonic mean of precision and recall | Balanced performance metric |
+| **Precision** | TP / (TP + FP) | Minimize false alarms |
+| **Recall** | TP / (TP + FN) | Minimize missed cold starts |
+
+Results are generated for each prediction horizon individually and for the ensemble model.
+
+## 🛠️ Technical Stack
+
+| Component | Library | Version | Purpose |
+|-----------|---------|---------|---------|
+| Deep Learning | PyTorch | ≥2.2.0 | LSTM model and training |
+| ML & Metrics | scikit-learn | ≥1.3.0 | RandomForest, evaluation metrics |
+| Data Processing | pandas | ≥2.0.0 | DataFrames and feature engineering |
+| Numerical Computing | NumPy | ≥1.24.0 | Array operations |
+| Visualization | Matplotlib | ≥3.7.0 | Plots and reports |
+| Gradient Boosting | XGBoost | ≥1.7.0 | Optional ensemble component |
+| Gradient Boosting | LightGBM | ≥4.0.0 | Optional ensemble component |
+| Deep Learning | TensorFlow/Keras | ≥2.13.0 | Optional alternative to PyTorch |
+
+## 💻 Device Support
+
+The system automatically detects and uses the optimal compute device:
+
+- **CUDA GPU** (if available) – Recommended for faster training and inference
+- **CPU** (fallback) – Works on any machine, slower but functional
+
+GPU usage is logged during training. Check logs for `CUDA device` messages.
+
+## 📁 Project Structure
+
+```
+serverless_cold_start/
+├── main.py                          # Main pipeline orchestrator
+├── requirements.txt                 # Python dependencies
+├── pyproject.toml                   # Project metadata and config
+├── README.md                        # This file
+├── uv.lock                          # Dependency lock file (for uv)
+├── config/
+│   ├── config.py                    # Configuration constants
+│   └── __init__.py
+├── data_loader/
+│   ├── loader.py                    # Dataset loading and parsing
+│   └── __init__.py
+├── feature_engineer/
+│   ├── engineer.py                  # Feature extraction and engineering
+│   └── __init__.py
+├── models/
+│   ├── bilstm_model.py             # BiLSTM PyTorch model definition
+│   ├── adaptive_threshold_controller.py  # Threshold adaptation logic
+│   ├── simulator.py                 # Simulation and evaluation
+│   └── __init__.py
+├── visualization/
+│   ├── plots.py                     # Plotting and visualization functions
+│   └── __init__.py
+├── generated_models/                # Output directory for trained models
+├── results/                         # Output directory for evaluation results
+├── R1.zip                           # Dataset archive (after download)
+└── R1/                              # Extracted dataset (day_0.csv through day_30.csv)
+```
+
+## 🔧 Troubleshooting
+
+### "day_0.csv not found" Error
+**Solution:**
+- Ensure the R1.zip dataset is downloaded and extracted: `unzip R1.zip`
+- Verify the `--dir` path points to the correct extracted directory containing CSV files
+- Confirm files are named exactly `day_0.csv`, `day_1.csv`, ..., `day_30.csv`
+
+### Download Fails
+**Solution:**
 - Check your internet connection
-- Try using curl instead of wget: `curl -O <URL>`
-- Verify the download link is active
+- Verify the Google Drive link is accessible and not quota-limited
+- Try alternative download methods (browser, curl, wget)
+- Check available disk space (requires ~500MB for dataset)
 
-**Issue: CUDA out of memory**
-- Reduce `BATCH_SIZE` in `main.py`
-- Use CPU by not installing CUDA PyTorch
+### CUDA Out of Memory Error
+**Solution:**
+- Reduce `BATCH_SIZE` in `main.py` (try 32 or 16)
+- Switch to CPU by using non-CUDA PyTorch: `pip install torch`
+- Use a GPU with higher VRAM or split the data into smaller chunks
 
-**Issue: Slow training**
-- Verify GPU is being used: check logs for CUDA device
-- Increase `BATCH_SIZE` if GPU memory allows
+### Slow Training / Low GPU Utilization
+**Solution:**
+- Verify CUDA is properly installed: `python -c "import torch; print(torch.cuda.is_available())"`
+- Check training logs for CUDA device usage
+- Increase `BATCH_SIZE` if GPU memory allows (up to 256 or 512)
+- Use a machine with better GPU hardware (A100, H100, RTX 4090)
 
-## Citation
+### Import Errors (TensorFlow, XGBoost, etc.)
+**Solution:**
+- Reinstall all dependencies: `pip install -r requirements.txt --force-reinstall`
+- Verify Python version is 3.14+: `python --version`
+- Check for version conflicts in `pyproject.toml` (TensorFlow compatibility constraints)
 
-If you use this project, please cite:
+## 📚 References
 
+- **PyTorch Documentation:** https://pytorch.org/docs/stable/
+- **scikit-learn Guide:** https://scikit-learn.org/stable/
+- **Huawei Cloud Traces:** https://github.com/sir-lab/data-release/blob/main/README_data_release_2025.md
+- **LSTM/BiLSTM Theory:** https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+- **Ensemble Methods:** https://scikit-learn.org/stable/modules/ensemble.html
+
+## 📖 Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@project{cold_start_mitigation_2025,
+  title={Proactive Cold Start Mitigation in Serverless Environments},
+  author={Your Name},
+  year={2025},
+  url={https://github.com/yourusername/serverless_cold_start},
+  note={Huawei Public Cloud Trace 2025 -- Region 1}
+}
 ```
-Proactive Cold Start Mitigation in Serverless Environments
-Dataset: Huawei Public Cloud Trace  Region 12025 
-```
 
-## License
+## 📄 License
 
-See project repository for licensing information.
+See the LICENSE file in the project repository for licensing information.
 
-## References
+## ❓ Support & Questions
 
-- PyTorch Documentation: https://pytorch.org/docs/stable/
-- scikit-learn: https://scikit-learn.org/
-- Huawei Cloud Traces: [[Github](https://github.com/sir-lab/data-release/blob/main/README_data_release_2025.md)]
+For issues, questions, or feature requests:
+1. Check the Troubleshooting section above
+2. Review existing GitHub Issues
+3. Create a new issue with:
+   - Error message and full traceback
+   - Python version and OS
+   - Steps to reproduce the problem
+   - Hardware specs (GPU/CPU, RAM)
+
+---
+
+**Last Updated:** 2025
+**Status:** Active Development
