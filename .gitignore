@@ -10,4 +10,19 @@ wheels/
 .venv
 R1
 R1.zip
+
+# VS Code settings
+.vscode/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# MacOS files
 .DS_Store
+thumbs.db
