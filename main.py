@@ -1,7 +1,7 @@
 """
 Proactive Cold Start Mitigation in Serverless Environments
 ==========================================================
-Full 31-Day Pipeline — PyTorch Edition (Python 3.14 compatible)
+Full 31-Day Pipeline — EDA, Feature Engineering, BiLSTM + RandomForest Hybrid, Adaptive Threshold Controller, Simulation, Multi-Horizon Evaluation
 Dataset: Huawei Public Cloud Trace 2025 – Region 1 Cold Start Traces
 ----------------------------------------------------------------
 
@@ -248,7 +248,7 @@ def align_tabular(df: pd.DataFrame, X_tab: np.ndarray, seq_len: int):
 
 class BiLSTMClassifier(nn.Module):
     """
-    Bidirectional LSTM cold-start predictor (PyTorch).
+    Bidirectional LSTM cold-start predictor.
 
     Architecture:
         Input  (batch, seq_len, n_features)
