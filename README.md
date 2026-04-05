@@ -267,24 +267,6 @@ serverless_cold_start/
 - **LSTM/BiLSTM Theory:** https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 - **Ensemble Methods:** https://scikit-learn.org/stable/modules/ensemble.html
 
-## 📖 Citation
-
-If you use this project in your research, please cite:
-
-```bibtex
-@project{cold_start_mitigation_2025,
-  title={Proactive Cold Start Mitigation in Serverless Environments},
-  author={Your Name},
-  year={2025},
-  url={https://github.com/yourusername/serverless_cold_start},
-  note={Huawei Public Cloud Trace 2025 -- Region 1}
-}
-```
-
-## 📄 License
-
-See the LICENSE file in the project repository for licensing information.
-
 ## ❓ Support & Questions
 
 For issues, questions, or feature requests:
@@ -295,8 +277,3 @@ For issues, questions, or feature requests:
    - Python version and OS
    - Steps to reproduce the problem
    - Hardware specs (GPU/CPU, RAM)
-
----
-
-**Last Updated:** 2025
-**Status:** Active Development
