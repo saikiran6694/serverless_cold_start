@@ -14,7 +14,7 @@ Architecture:
 
 Usage:
     First unzip the R1.zip file to get the CSV files (day_0.csv, day_1.csv, ..., day_30.csv).
-    python main.py --dir /path/to/data/
+    uv run python main.py --dir /path/to/data/
 """
 
 import os, sys, glob, pickle, warnings, argparse

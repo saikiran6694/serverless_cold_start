@@ -56,7 +56,7 @@ def plot_model_comparison(y_test, lstm_probs, rf_probs, hybrid_probs,
     ax = axes[0]
     ax.plot(history['val_auc'], color='tomato', lw=1.5, label='Val AUC')
     ax.set_xlabel('Epoch'); ax.set_ylabel('AUC')
-    ax.set_title('LSTM Validation AUC'); ax.legend(); ax.grid(alpha=0.3)
+    ax.set_title('BiLSTM Validation AUC'); ax.legend(); ax.grid(alpha=0.3)
 
     ax = axes[1]
     for probs, label, color in [

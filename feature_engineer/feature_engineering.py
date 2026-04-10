@@ -65,15 +65,15 @@ def split_by_day(pm_feat: pd.DataFrame):
     for label, days in [('TRAIN', TRAIN_DAYS), ('VAL', VAL_DAYS), ('TEST', TEST_DAYS)]:
         missing = [d for d in days if d not in available]
         if missing:
-            print(f"  WARNING: {label}_DAYS {missing} not found in dataset — skipping")
+            print(f"  WARNING   :    {label}_DAYS {missing} not found in dataset — skipping")
 
     train = pm_feat[pm_feat['day'].isin(TRAIN_DAYS)].copy()
     val   = pm_feat[pm_feat['day'].isin(VAL_DAYS)].copy()
     test  = pm_feat[pm_feat['day'].isin(TEST_DAYS)].copy()
 
-    print(f"  Train : days {TRAIN_DAYS[0]}–{TRAIN_DAYS[-1]}  →  {len(train):,} rows  ({len(train)//1440} days)")
-    print(f"  Val   : days {VAL_DAYS[0]}–{VAL_DAYS[-1]}      →  {len(val):,} rows  ({len(val)//1440} days)")
-    print(f"  Test  : days {TEST_DAYS[0]}–{TEST_DAYS[-1]}     →  {len(test):,} rows  ({len(test)//1440} days)")
+    print(f"  Train     :    days {TRAIN_DAYS[0]}–{TRAIN_DAYS[-1]}  →  {len(train):,} rows  ({len(train)//1440} days)")
+    print(f"  Val       :    days {VAL_DAYS[0]}–{VAL_DAYS[-1]}      →  {len(val):,} rows  ({len(val)//1440} days)")
+    print(f"  Test      :    days {TEST_DAYS[0]}–{TEST_DAYS[-1]}     →  {len(test):,} rows  ({len(test)//1440} days)")
 
     if len(train) == 0: raise ValueError("Train set is empty — check TRAIN_DAYS vs your CSV filenames")
     if len(val)   == 0: raise ValueError("Val set is empty — check VAL_DAYS vs your CSV filenames")
