@@ -38,10 +38,6 @@ from models.bilstm_model import train_lstm, predict_lstm
 from models.simulator import simulate
 
 
-# ═══════════════════════════════════════════════════════════
-# 9. MAIN PIPELINE
-# ═══════════════════════════════════════════════════════════
-
 def run_pipeline(csv_paths, out_dir='results', model_dir='generated_models'):
     os.makedirs(out_dir,   exist_ok=True)
     os.makedirs(model_dir, exist_ok=True)
@@ -242,6 +238,12 @@ if __name__ == '__main__':
     parser.add_argument('--out',    type=str, default='results')
     parser.add_argument('--models', type=str, default='generated_models')
     args = parser.parse_args()
+
+    print("\n" + "="*60)
+    print("PROACTIVE COLD START MITIGATION PIPELINE")
+    print("="*60)
+
+    print("Loading CSV files...")
 
     if args.dir:
         paths = sorted(glob.glob(os.path.join(args.dir, 'day_*.csv')))

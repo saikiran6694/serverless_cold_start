@@ -22,9 +22,6 @@ class BiLSTMClassifier(nn.Module):
         → BatchNorm1d(128)
         → Linear(128→32) → ReLU → Dropout(0.3)
         → Linear(32→1) → Sigmoid
-
-    Sized for ~15K–22K training sequences. Use hidden=128, num_layers=2
-    only if you have 100K+ sequences.
     """
     def __init__(self, n_features: int, hidden_size: int = 64, num_layers: int = 1):
         super().__init__()
@@ -54,7 +51,9 @@ class BiLSTMClassifier(nn.Module):
 
 def train_lstm(X_train: np.ndarray, y_train: np.ndarray,
                X_val:   np.ndarray, y_val:   np.ndarray):
-    """Train BiLSTM with early stopping on validation AUC."""
+    """
+    Train BiLSTM with early stopping on validation AUC.
+    """
     model     = BiLSTMClassifier(X_train.shape[2]).to(DEVICE)
     optimizer = Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
     # patience=3: drop LR quickly when val plateaus; factor=0.5: halve it

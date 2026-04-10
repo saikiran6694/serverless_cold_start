@@ -2,8 +2,10 @@ import pandas as pd
 import os
 
 def load_day(path: str) -> pd.DataFrame:
-    """Load one CSV → per-minute (day, minute, total, cold, cold_rate).
-    Dataset: Huawei Public Cloud Trace 2025 – Region 1."""
+    """
+    Load one CSV → per-minute (day, minute, total, cold, cold_rate).
+    Dataset: Huawei Public Cloud Trace 2025 – Region 1.
+    """
     df = pd.read_csv(path)
     day_num = int(os.path.basename(path).split('_')[1].split('.')[0])
     df['time_sec'] = df['time'] % 86400

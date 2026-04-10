@@ -5,7 +5,19 @@ from models.adaptive_threshold_controller import AdaptiveThresholdController
 
 def simulate(test_data: pd.DataFrame, hybrid_probs: np.ndarray,
              y_test: np.ndarray):
-    """Compare No Warming / Fixed (0.5) / Adaptive on the test day."""
+    """
+    Compare No Warming / Fixed (0.5) / Adaptive on the test day.
+    For each minute, we have:
+      - actual: whether a cold start occurred (1) or not (0)
+      - prob: model's predicted probability of a cold start
+    Strategies:
+    1. No Warming (Baseline): never warm; cold starts = actual cold starts
+    2. Fixed Threshold: warm if prob >= 0.5; cold starts = 0 if (warmed and actual) else actual
+    3. Adaptive: use controller to decide; cold starts = 0 if (warmed and actual) else actual
+    
+    The controller updates its threshold after each prediction based on the outcome, aiming to minimize cold starts while avoiding unnecessary warmings.
+    Returns a summary DataFrame comparing the strategies, and detailed DataFrames for the adaptive and fixed strategies.
+    """
     controller = AdaptiveThresholdController()
     rows_adap, rows_fixed, rows_none = [], [], []
 

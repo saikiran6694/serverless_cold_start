@@ -1,7 +1,3 @@
-# ═══════════════════════════════════════════════════════════
-# CONFIGURATION
-# ═══════════════════════════════════════════════════════════
-
 # Fixed research-grade splits — explicitly defined for reproducibility
 # Train: days 0–18  (19 days)
 # Val  : days 19–24  (6 days)
@@ -25,6 +21,7 @@ PRIMARY_HORIZON = 'target_5min'
 
 DEVICE = "cpu"
 
+# for Random Forest Classifier to predict the binary 'cold' label
 TABULAR_FEATURES = [
     'hour', 'is_business', 'day_of_week',
     'roll_mean_5',  'roll_std_5',  'roll_cold_5',
@@ -39,6 +36,7 @@ TABULAR_FEATURES = [
     'cold_acceleration',
 ]
 
+# for LSTM to predict the continuous 'total_norm' value
 SEQUENCE_FEATURES = [
     'total_norm', 'cold_rate',
     'roll_mean_5',  'roll_cold_5',

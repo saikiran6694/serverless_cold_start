@@ -7,10 +7,6 @@ def engineer_features(pm: pd.DataFrame) -> pd.DataFrame:
     """
     Build temporal, rolling, lag, trend, and target features.
     All rolling ops are scoped within each day to avoid midnight leakage.
-
-    Uses an explicit per-day loop instead of groupby().apply() to avoid
-    a pandas compatibility issue where newer versions drop the groupby key
-    column ('day') from the group DataFrame, causing KeyError: 'day'.
     """
     pm = pm.copy().sort_values(['day', 'minute']).reset_index(drop=True)
     results = []
@@ -81,14 +77,17 @@ def split_by_day(pm_feat: pd.DataFrame):
 
     return train, val, test
 
-
-# ═══════════════════════════════════════════════════════════
-# 4. SEQUENCE BUILDER  (no cross-day leakage)
-# ═══════════════════════════════════════════════════════════
-
+# ══════════════════════════════════════════════════════════
+# 4. SEQUENCE PREPARATION
+# ══════════════════════════════════════════════════════════
 def make_sequences_by_day(pm_feat: pd.DataFrame, seq_data_sc: np.ndarray,
                            target_col: str, seq_len: int):
-    """Build LSTM windows per day — no window ever crosses midnight."""
+    """
+    Build LSTM windows per day — no window ever crosses midnight.
+    Returns:
+      Xs: (num_samples, seq_len, num_features) — 3D array of input sequences
+      ys: (num_samples,) — 1D array of binary labels for each sequence
+    """
     Xs, ys = [], []
     pos = 0
     for day, group in pm_feat.groupby('day'):
@@ -103,7 +102,11 @@ def make_sequences_by_day(pm_feat: pd.DataFrame, seq_data_sc: np.ndarray,
 
 
 def align_tabular(df: pd.DataFrame, X_tab: np.ndarray, seq_len: int):
-    """Drop the first seq_len rows per day to align with sequence outputs."""
+    """
+    Drop the first seq_len rows per day to align with sequence outputs.
+    Returns:
+      rows: (num_samples, num_tab_features) — 2D array of tabular features aligned with sequences
+    """
     rows = []
     pos  = 0
     for day, group in df.groupby('day'):
